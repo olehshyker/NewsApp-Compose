@@ -13,20 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.olehsh.newsapp.model
+package com.olehsh.newsapp.network
 
-data class NewsArticle(
-  val author: String,
-  val content: String,
-  val description: String,
-  val publishedAt: String,
-  val source: ArticleSource,
-  val title: String,
-  val url: String,
-  val imageUrl: String,
-)
+object ApiConstants {
+  const val HEADER_API_KEY = "X-Api-Key"
 
-data class ArticleSource(
-  val id: String? = null,
-  val name: String? = null,
-)
+  const val DEFAULT_PAGE_SIZE = 20
+}

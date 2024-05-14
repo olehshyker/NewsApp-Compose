@@ -13,20 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.olehsh.newsapp.model
+package com.olehsh.newsapp.network.api
 
-data class NewsArticle(
-  val author: String,
-  val content: String,
-  val description: String,
-  val publishedAt: String,
-  val source: ArticleSource,
-  val title: String,
-  val url: String,
-  val imageUrl: String,
-)
+import com.olehsh.newsapp.network.model.HeadlinesResponse
+import retrofit2.http.GET
 
-data class ArticleSource(
-  val id: String? = null,
-  val name: String? = null,
-)
+interface NewsApi {
+  @GET("v2/top-headlines?sources=bbc-news")
+  suspend fun getTopHeadlines(): HeadlinesResponse
+}

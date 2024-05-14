@@ -13,20 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.olehsh.newsapp.model
+package com.olehsh.newsapp.network.interceptor
 
-data class NewsArticle(
-  val author: String,
-  val content: String,
-  val description: String,
-  val publishedAt: String,
-  val source: ArticleSource,
-  val title: String,
-  val url: String,
-  val imageUrl: String,
-)
+import com.olehsh.newsapp.network.ApiConstants
+import com.olehsh.newsapp.network.BuildConfig
+import okhttp3.Interceptor
+import okhttp3.Response
 
-data class ArticleSource(
-  val id: String? = null,
-  val name: String? = null,
-)
+class TokenInterceptor : Interceptor {
+
+  override fun intercept(chain: Interceptor.Chain): Response {
+    val request = chain.request().newBuilder()
+    request.addHeader(ApiConstants.HEADER_API_KEY, BuildConfig.NEWS_API_KEY)
+
+    return chain.proceed(request.build())
+  }
+}
