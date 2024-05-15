@@ -15,12 +15,19 @@
  */
 package com.olehsh.newsapp.network.di
 
+import android.content.Context
+import coil.ImageLoader
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
+import coil.util.DebugLogger
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.olehsh.newsapp.network.BuildConfig
 import com.olehsh.newsapp.network.api.NewsApi
+import com.olehsh.newsapp.network.interceptor.TokenInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -43,6 +50,7 @@ internal object NetworkModule {
   @Singleton
   fun okHttpCallFactory(): OkHttpClient =
     OkHttpClient.Builder()
+      .addInterceptor(TokenInterceptor())
       .addInterceptor(
         HttpLoggingInterceptor()
           .apply {
