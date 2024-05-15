@@ -61,4 +61,31 @@ internal object NetworkModule {
     .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
     .build()
     .create(NewsApi::class.java)
+
+  @Provides
+  @Singleton
+  fun imageLoader(
+    okHttpClient: OkHttpClient,
+    @ApplicationContext application: Context,
+  ): ImageLoader =
+    ImageLoader.Builder(application)
+      .okHttpClient(okHttpClient)
+      .memoryCache {
+        MemoryCache.Builder(application)
+          .maxSizePercent(0.20)
+          .build()
+      }
+      .diskCache {
+        DiskCache.Builder()
+          .directory(application.cacheDir.resolve("image_cache"))
+          .maxSizeBytes(5 * 1024 * 1024)
+          .build()
+      }
+      .respectCacheHeaders(false)
+      .apply {
+        if (BuildConfig.DEBUG) {
+          logger(DebugLogger())
+        }
+      }
+      .build()
 }
