@@ -13,4 +13,5 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines)
     implementation(libs.javax.inject)
+    implementation(libs.androidx.paging.runtime)
 }

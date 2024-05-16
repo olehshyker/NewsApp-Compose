@@ -15,10 +15,22 @@
  */
 package com.olehsh.newsapp.data.di
 
+import com.olehsh.newsapp.data.repository.details.ArticleDetailsRepository
+import com.olehsh.newsapp.data.repository.details.ArticleDetailsRepositoryImpl
+import com.olehsh.newsapp.data.repository.home.HomeRepository
+import com.olehsh.newsapp.data.repository.home.HomeRepositoryImpl
+import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DataModule
+abstract class DataModule {
+
+  @Binds
+  internal abstract fun bindsNewsRepository(newsRepositoryImpl: HomeRepositoryImpl): HomeRepository
+
+  @Binds
+  internal abstract fun bindsArticleDetailsRepository(articleDetailsRepository: ArticleDetailsRepositoryImpl): ArticleDetailsRepository
+}

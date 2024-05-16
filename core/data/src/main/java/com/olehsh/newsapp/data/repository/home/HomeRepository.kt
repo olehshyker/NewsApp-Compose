@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.olehsh.newsapp.network.api
+package com.olehsh.newsapp.data.repository.home
 
-import com.olehsh.newsapp.network.ApiConstants
-import com.olehsh.newsapp.network.model.HeadlinesResponse
-import retrofit2.http.GET
-import retrofit2.http.Query
+import androidx.paging.PagingData
+import com.olehsh.newsapp.model.NewsArticle
+import kotlinx.coroutines.flow.Flow
 
-interface NewsApi {
-  @GET("v2/top-headlines?sources=bbc-news")
-  suspend fun getTopHeadlines(): HeadlinesResponse
+interface HomeRepository {
 
-  @GET("v2/everything")
-  suspend fun getNewsList(
-    @Query("q") query: String = "trending",
-    @Query("page") page: Int = 1,
-    @Query("pageSize") pageSize: Int = ApiConstants.DEFAULT_PAGE_SIZE,
-  ): HeadlinesResponse
+  fun fetchTopHeadlines(): Flow<List<NewsArticle>>
+
+  suspend fun syncHeadlines()
+
+  fun fetchNewsList(): Flow<PagingData<NewsArticle>>
 }
