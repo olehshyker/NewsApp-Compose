@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.olehsh.newsapp
+package com.olehsh.newsapp.domain
 
-import android.app.Application
-import coil.ImageLoader
-import coil.ImageLoaderFactory
-import dagger.hilt.android.HiltAndroidApp
+import com.olehsh.newsapp.data.repository.home.HomeRepository
+import com.olehsh.newsapp.model.NewsArticle
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-@HiltAndroidApp
-class NewsApplication : Application(), ImageLoaderFactory {
+class GetTopHeadlinesUseCase @Inject constructor(
+  private val homeRepository: HomeRepository,
+) {
 
-  @Inject
-  lateinit var imageLoader: dagger.Lazy<ImageLoader>
-
-  override fun newImageLoader(): ImageLoader = imageLoader.get()
+  operator fun invoke(): Flow<List<NewsArticle>> {
+    return homeRepository.fetchTopHeadlines()
+  }
 }

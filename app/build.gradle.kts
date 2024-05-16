@@ -45,6 +45,7 @@ android {
 
 dependencies {
     implementation(projects.core.designsystem)
+    implementation(projects.feature.home)
     // compose
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.ui)

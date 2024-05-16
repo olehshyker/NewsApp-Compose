@@ -18,22 +18,24 @@ package com.olehsh.newsapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import com.olehsh.newsapp.designsystem.NewsAppTheme
+import androidx.activity.enableEdgeToEdge
+import androidx.navigation.compose.rememberNavController
+import com.olehsh.newsapp.designsystem.components.AppBackground
+import com.olehsh.newsapp.designsystem.theme.NewsAppTheme
+import com.olehsh.newsapp.navigation.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
+    enableEdgeToEdge()
     super.onCreate(savedInstanceState)
     setContent {
       NewsAppTheme {
-        Column(Modifier.fillMaxSize()) {
-          Text(text = stringResource(id = R.string.app_name))
+        val navHostController = rememberNavController()
+
+        AppBackground {
+          AppNavHost(navController = navHostController)
         }
       }
     }

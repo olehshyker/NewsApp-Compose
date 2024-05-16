@@ -13,19 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.olehsh.newsapp
+package com.olehsh.newsapp.domain
 
-import android.app.Application
-import coil.ImageLoader
-import coil.ImageLoaderFactory
-import dagger.hilt.android.HiltAndroidApp
+import com.olehsh.newsapp.data.repository.home.HomeRepository
 import javax.inject.Inject
 
-@HiltAndroidApp
-class NewsApplication : Application(), ImageLoaderFactory {
+class SyncTopHeadlinesUseCase @Inject constructor(
+  private val homeRepository: HomeRepository,
+) {
 
-  @Inject
-  lateinit var imageLoader: dagger.Lazy<ImageLoader>
-
-  override fun newImageLoader(): ImageLoader = imageLoader.get()
+  suspend operator fun invoke() {
+    return homeRepository.syncHeadlines()
+  }
 }
