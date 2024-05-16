@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.olehsh.newsapp.home.navigation.HOME_ROUTE
+import com.olehsh.newsapp.home.navigation.articleDetailsScreen
 import com.olehsh.newsapp.home.navigation.homeScreen
 import com.olehsh.newsapp.home.navigation.navigateToDetails
 
@@ -39,5 +40,6 @@ fun AppNavHost(
         navController.navigateToDetails(it)
       },
     )
+    articleDetailsScreen(onBackClicked = { navController.navigateUp() })
   }
 }
