@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="txt_just_now">Just now</string>
+    <string name="txt_minute_ago">a minute ago</string>
+    <string name="txt_minutes_ago_format">%d minutes ago</string>
+    <string name="txt_hour_ago">an hour ago</string>
+    <string name="txt_hours_ago_format">%d hours ago</string>
+    <string name="txt_yesterday">yesterday</string>
+    <string name="txt_days_ago_format">%d days ago</string>
+    <string name="txt_month_ago">a month ago</string>
+    <string name="txt_months_ago_format">%d months ago</string>
+    <string name="txt_year_ago">a year ago</string>
+    <string name="txt_years_ago_format">%d years ago</string>
+</resources>
