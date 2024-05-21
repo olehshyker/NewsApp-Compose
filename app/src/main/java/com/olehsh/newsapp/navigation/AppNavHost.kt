@@ -20,9 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.olehsh.newsapp.home.navigation.HOME_ROUTE
+import com.olehsh.newsapp.home.navigation.SourceType
 import com.olehsh.newsapp.home.navigation.articleDetailsScreen
 import com.olehsh.newsapp.home.navigation.homeScreen
 import com.olehsh.newsapp.home.navigation.navigateToDetails
+import com.olehsh.newsapp.search.navigation.searchScreen
 
 @Composable
 fun AppNavHost(
@@ -37,7 +39,12 @@ fun AppNavHost(
   ) {
     homeScreen(
       onArticleClicked = {
-        navController.navigateToDetails(it)
+        navController.navigateToDetails(it, sourceType = SourceType.HOME)
+      },
+    )
+    searchScreen(
+      onArticleClicked = {
+        navController.navigateToDetails(it, sourceType = SourceType.SEARCH)
       },
     )
     articleDetailsScreen(onBackClicked = { navController.navigateUp() })

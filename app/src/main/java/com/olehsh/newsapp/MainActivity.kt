@@ -37,6 +37,7 @@ import com.olehsh.newsapp.bottombar.components.AppNavigationBarItem
 import com.olehsh.newsapp.designsystem.theme.NewsAppTheme
 import com.olehsh.newsapp.home.navigation.navigateToHome
 import com.olehsh.newsapp.navigation.AppNavHost
+import com.olehsh.newsapp.search.navigation.navigateToSearch
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -65,7 +66,7 @@ class MainActivity : ComponentActivity() {
                     when (tab) {
                       Tab.HOME -> navHostController.navigateToHome()
                       Tab.SEARCH -> {
-                        /* TODO */
+                        navHostController.navigateToSearch()
                       }
 
                       Tab.BOOKMARKS -> {

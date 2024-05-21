@@ -13,19 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.olehsh.newsapp.data.repository.home
+package com.olehsh.newsapp.data.repository.search
 
-import androidx.paging.PagingData
 import com.olehsh.newsapp.model.NewsArticle
 import kotlinx.coroutines.flow.Flow
 
-interface HomeRepository {
+interface SearchRepository {
 
-  fun fetchTopHeadlines(): Flow<List<NewsArticle>>
+  fun searchArticles(query: String): Flow<List<NewsArticle>>
 
-  suspend fun syncHeadlines()
-
-  fun fetchNewsList(): Flow<PagingData<NewsArticle>>
-
-  fun searchArticles(query: String): Flow<PagingData<NewsArticle>>
+  fun getSearchArticleDetailsById(articleId: String): Flow<NewsArticle>
 }

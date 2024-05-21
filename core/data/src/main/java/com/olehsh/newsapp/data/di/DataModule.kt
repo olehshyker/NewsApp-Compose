@@ -19,6 +19,8 @@ import com.olehsh.newsapp.data.repository.details.ArticleDetailsRepository
 import com.olehsh.newsapp.data.repository.details.ArticleDetailsRepositoryImpl
 import com.olehsh.newsapp.data.repository.home.HomeRepository
 import com.olehsh.newsapp.data.repository.home.HomeRepositoryImpl
+import com.olehsh.newsapp.data.repository.search.SearchRepository
+import com.olehsh.newsapp.data.repository.search.SearchRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,4 +35,7 @@ abstract class DataModule {
 
   @Binds
   internal abstract fun bindsArticleDetailsRepository(articleDetailsRepository: ArticleDetailsRepositoryImpl): ArticleDetailsRepository
+
+  @Binds
+  internal abstract fun bindsSearchRepository(searchRepository: SearchRepositoryImpl): SearchRepository
 }

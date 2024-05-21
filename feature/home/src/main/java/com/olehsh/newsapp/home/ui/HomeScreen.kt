@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -37,10 +38,11 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.olehsh.newsapp.common.toTimeAgo
 import com.olehsh.newsapp.designsystem.components.NewsAppBar
+import com.olehsh.newsapp.designsystem.components.NewsListItem
 import com.olehsh.newsapp.home.R
 import com.olehsh.newsapp.home.ui.components.HeadlineCard
-import com.olehsh.newsapp.home.ui.components.NewsListItem
 import com.olehsh.newsapp.home.ui.components.TitleText
 import com.olehsh.newsapp.model.ArticleSource
 import com.olehsh.newsapp.model.NewsArticle
@@ -49,7 +51,7 @@ import com.olehsh.newsapp.model.NewsArticle
 fun HomeScreen(
   modifier: Modifier = Modifier,
   homeViewModel: HomeViewModel = hiltViewModel(),
-  onArticleClicked: (NewsArticle) -> Unit = {},
+  onArticleClicked: (String) -> Unit = {},
 ) {
   val homeUiState by homeViewModel.homeUiState.collectAsStateWithLifecycle()
   val trendingNewsUiState by homeViewModel.trendingNewsUiState.collectAsStateWithLifecycle()
@@ -71,9 +73,10 @@ internal fun HomeContent(
   newsPagingUiState: NewsPagingUiState,
   headlinesList: List<NewsArticle>,
   lazyPagingItems: LazyPagingItems<NewsArticle>,
-  onArticleClicked: (NewsArticle) -> Unit,
+  onArticleClicked: (String) -> Unit,
 ) {
   val pagerState = rememberPagerState(pageCount = { headlinesList.size })
+  val context = LocalContext.current
 
   Column(modifier = Modifier.fillMaxSize()) {
     NewsAppBar(title = stringResource(id = com.olehsh.newsapp.designsystem.R.string.daily_news))
@@ -85,7 +88,7 @@ internal fun HomeContent(
     ) { page ->
       HeadlineCard(
         article = headlinesList[page],
-        onArticleClick = { onArticleClicked.invoke(it) },
+        onArticleClick = { onArticleClicked.invoke(it.url) },
       )
     }
 
@@ -110,9 +113,16 @@ internal fun HomeContent(
         key = lazyPagingItems.itemKey { it.url },
       ) { index ->
         lazyPagingItems[index]?.let { article ->
-          NewsListItem(article, onArticleClicked = {
-            onArticleClicked.invoke(it)
-          })
+          NewsListItem(
+            title = article.title,
+            description = article.description,
+            articleUrl = article.url,
+            imageUrl = article.imageUrl,
+            publishedTimeFormatted = context.toTimeAgo(article.publishedAt),
+            onArticleClicked = {
+              onArticleClicked.invoke(it)
+            },
+          )
         }
       }
 
