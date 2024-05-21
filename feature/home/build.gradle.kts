@@ -1,5 +1,6 @@
 plugins {
     id("build.android.feature")
+    id("build.spotless")
 }
 
 android {

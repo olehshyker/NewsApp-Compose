@@ -19,9 +19,23 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.olehsh.newsapp.designsystem.components.AppBackground
+import com.olehsh.newsapp.bottombar.Tab
+import com.olehsh.newsapp.bottombar.components.AppNavigationBar
+import com.olehsh.newsapp.bottombar.components.AppNavigationBarItem
 import com.olehsh.newsapp.designsystem.theme.NewsAppTheme
+import com.olehsh.newsapp.home.navigation.navigateToHome
 import com.olehsh.newsapp.navigation.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,8 +48,49 @@ class MainActivity : ComponentActivity() {
       NewsAppTheme {
         val navHostController = rememberNavController()
 
-        AppBackground {
-          AppNavHost(navController = navHostController)
+        Scaffold(
+          contentWindowInsets = WindowInsets(0.dp),
+          bottomBar = {
+            val currentRoute =
+              navHostController.currentBackStackEntryAsState().value?.destination?.route
+            AppNavigationBar(
+              modifier = Modifier
+                .navigationBarsPadding(),
+            ) {
+              for (tab in remember { Tab.entries }) {
+                AppNavigationBarItem(
+                  onSelected = { currentRoute == tab.route },
+                  onClick = {
+                    if (currentRoute == tab.route) return@AppNavigationBarItem
+                    when (tab) {
+                      Tab.HOME -> navHostController.navigateToHome()
+                      Tab.SEARCH -> {
+                        /* TODO */
+                      }
+
+                      Tab.BOOKMARKS -> {
+                        /* TODO */
+                      }
+                    }
+                  },
+                  icon = {
+                    Icon(
+                      painterResource(id = tab.icon),
+                      contentDescription = tab.label,
+                    )
+                  },
+                )
+              }
+            }
+          },
+          modifier = Modifier.fillMaxSize(),
+        ) { paddingValues ->
+          AppNavHost(
+            navController = navHostController,
+            modifier = Modifier
+              .padding(paddingValues)
+              .fillMaxSize(),
+          )
         }
       }
     }

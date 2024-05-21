@@ -1,3 +1,18 @@
+/*
+ * Copyright 2024 olehshyker
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.olehsh.newsapp.home.ui
 
 import androidx.lifecycle.ViewModel
@@ -9,7 +24,6 @@ import com.olehsh.newsapp.domain.GetTopHeadlinesUseCase
 import com.olehsh.newsapp.domain.SyncTopHeadlinesUseCase
 import com.olehsh.newsapp.model.NewsArticle
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,43 +37,43 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    getTopHeadlinesUseCase: GetTopHeadlinesUseCase,
-    private val syncTopHeadlinesUseCase: SyncTopHeadlinesUseCase,
-    getNewsListUseCase: GetNewsListUseCase,
+  getTopHeadlinesUseCase: GetTopHeadlinesUseCase,
+  private val syncTopHeadlinesUseCase: SyncTopHeadlinesUseCase,
+  getNewsListUseCase: GetNewsListUseCase,
 ) : ViewModel() {
-    init {
-        syncHeadLines()
+  init {
+    syncHeadLines()
+  }
+
+  val homeUiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Idle)
+
+  val headlinesList: StateFlow<List<NewsArticle>> =
+    getTopHeadlinesUseCase()
+      .onStart { homeUiState.tryEmit(HomeUiState.Loading) }
+      .onCompletion { homeUiState.tryEmit(HomeUiState.Idle) }
+      .catch { homeUiState.tryEmit(HomeUiState.Error(it.message)) }
+      .stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = emptyList(),
+      )
+
+  val trendingNewsUiState: MutableStateFlow<NewsPagingUiState> =
+    MutableStateFlow(NewsPagingUiState.Idle)
+
+  val trendingNewsList: Flow<PagingData<NewsArticle>> = getNewsListUseCase()
+    .onStart { trendingNewsUiState.tryEmit(NewsPagingUiState.Loading) }
+    .onCompletion { throwable ->
+      if (throwable == null) {
+        trendingNewsUiState.tryEmit(NewsPagingUiState.Idle)
+      } else {
+        trendingNewsUiState.tryEmit(NewsPagingUiState.Error(throwable.message))
+      }
+    }.cachedIn(viewModelScope)
+
+  private fun syncHeadLines() {
+    viewModelScope.launch {
+      syncTopHeadlinesUseCase()
     }
-
-    val homeUiState: MutableStateFlow<HomeUiState> = MutableStateFlow(HomeUiState.Idle)
-
-    val headlinesList: StateFlow<List<NewsArticle>> =
-        getTopHeadlinesUseCase()
-            .onStart { homeUiState.tryEmit(HomeUiState.Loading) }
-            .onCompletion { homeUiState.tryEmit(HomeUiState.Idle) }
-            .catch { homeUiState.tryEmit(HomeUiState.Error(it.message)) }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = emptyList(),
-            )
-
-    val trendingNewsUiState: MutableStateFlow<NewsPagingUiState> =
-        MutableStateFlow(NewsPagingUiState.Idle)
-
-    val trendingNewsList: Flow<PagingData<NewsArticle>> = getNewsListUseCase()
-        .onStart { trendingNewsUiState.tryEmit(NewsPagingUiState.Loading) }
-        .onCompletion { throwable ->
-            if (throwable == null) {
-                trendingNewsUiState.tryEmit(NewsPagingUiState.Idle)
-            } else {
-                trendingNewsUiState.tryEmit(NewsPagingUiState.Error(throwable.message))
-            }
-        }.cachedIn(viewModelScope)
-
-    private fun syncHeadLines() {
-        viewModelScope.launch {
-            syncTopHeadlinesUseCase()
-        }
-    }
+  }
 }
