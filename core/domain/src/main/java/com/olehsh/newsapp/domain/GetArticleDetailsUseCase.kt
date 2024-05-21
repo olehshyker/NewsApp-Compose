@@ -16,14 +16,20 @@
 package com.olehsh.newsapp.domain
 
 import com.olehsh.newsapp.data.repository.details.ArticleDetailsRepository
+import com.olehsh.newsapp.data.repository.search.SearchRepository
 import com.olehsh.newsapp.model.NewsArticle
+import com.olehsh.newsapp.model.SourceType
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetArticleDetailsUseCase @Inject constructor(
-  private val articleDetailsRepository: ArticleDetailsRepository,
+    private val articleDetailsRepository: ArticleDetailsRepository,
+    private val searchRepository: SearchRepository,
 ) {
-  operator fun invoke(articleId: String): Flow<NewsArticle> {
-    return articleDetailsRepository.getArticleDetailsById(articleId)
-  }
+    operator fun invoke(articleId: String, sourceType: SourceType): Flow<NewsArticle> {
+        return when (sourceType) {
+            SourceType.SEARCH -> searchRepository.getSearchArticleDetailsById(articleId)
+            else -> articleDetailsRepository.getArticleDetailsById(articleId)
+        }
+    }
 }

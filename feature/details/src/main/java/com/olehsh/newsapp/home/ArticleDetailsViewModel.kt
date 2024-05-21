@@ -6,9 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.olehsh.newsapp.common.Result
 import com.olehsh.newsapp.common.asResult
 import com.olehsh.newsapp.domain.GetArticleDetailsUseCase
-import com.olehsh.newsapp.domain.GetRecentSearchArticleDetailsUseCase
 import com.olehsh.newsapp.home.navigation.ArticleDetailsArgs
-import com.olehsh.newsapp.home.navigation.SourceType
+import com.olehsh.newsapp.model.SourceType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,28 +19,22 @@ import javax.inject.Inject
 class ArticleDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getArticleDetailsUseCase: GetArticleDetailsUseCase,
-    getRecentSearchArticleDetailsUseCase: GetRecentSearchArticleDetailsUseCase,
 ) : ViewModel() {
 
     private val args: ArticleDetailsArgs by lazy { ArticleDetailsArgs(savedStateHandle = savedStateHandle) }
 
-    val uiState: StateFlow<ArticleDetailsUiState> = when (SourceType.valueOf(args.sourceType)) {
-        SourceType.SEARCH -> {
-            getRecentSearchArticleDetailsUseCase(args.articleId)
-        }
-        else -> getArticleDetailsUseCase(args.articleId)
-    }
-        .asResult()
-        .map {
-            when (it) {
-                is Result.Error -> ArticleDetailsUiState.Error(it.exception?.message.orEmpty())
-                Result.Loading -> ArticleDetailsUiState.Loading
-                is Result.Success -> ArticleDetailsUiState.Success(it.data)
+    val uiState: StateFlow<ArticleDetailsUiState> =
+        getArticleDetailsUseCase(args.articleId, SourceType.valueOf(args.sourceType)).asResult()
+            .map {
+                when (it) {
+                    is Result.Error -> ArticleDetailsUiState.Error(it.exception?.message.orEmpty())
+                    Result.Loading -> ArticleDetailsUiState.Loading
+                    is Result.Success -> ArticleDetailsUiState.Success(it.data)
+                }
             }
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = ArticleDetailsUiState.Idle,
-        )
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = ArticleDetailsUiState.Idle,
+            )
 }
