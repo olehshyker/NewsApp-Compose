@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.olehsh.newsapp.home.ui.components
+package com.olehsh.newsapp.designsystem.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -29,31 +29,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.olehsh.newsapp.common.toTimeAgo
-import com.olehsh.newsapp.designsystem.components.CoilAsyncImage
-import com.olehsh.newsapp.model.NewsArticle
 
 @Composable
 fun NewsListItem(
-  article: NewsArticle,
-  onArticleClicked: (NewsArticle) -> Unit,
+  title: String,
+  description: String,
+  articleUrl: String,
+  imageUrl: String,
+  publishedTimeFormatted: String,
+  onArticleClicked: (String) -> Unit,
 ) {
   Card(
     modifier = Modifier
       .fillMaxWidth()
       .padding(8.dp)
-      .clickable(onClick = { onArticleClicked(article) }),
+      .clickable(onClick = { onArticleClicked(articleUrl) }),
     shape = RoundedCornerShape(8.dp),
   ) {
-    val context = LocalContext.current
-
     Row(verticalAlignment = Alignment.CenterVertically) {
       CoilAsyncImage(
-        imageUrl = article.imageUrl,
-        contentDescription = article.description,
+        imageUrl = imageUrl,
+        contentDescription = description,
         modifier = Modifier
           .size(width = 140.dp, height = 120.dp)
           .padding(8.dp)
@@ -61,14 +59,14 @@ fun NewsListItem(
       )
       Column(modifier = Modifier.padding(8.dp)) {
         Text(
-          text = article.title,
+          text = title,
           maxLines = 2,
           overflow = TextOverflow.Ellipsis,
           style = MaterialTheme.typography.titleSmall,
         )
 
         Text(
-          text = article.description,
+          text = description,
           maxLines = 2,
           modifier = Modifier.padding(top = 8.dp),
           overflow = TextOverflow.Ellipsis,
@@ -76,7 +74,7 @@ fun NewsListItem(
         )
 
         Text(
-          text = context.toTimeAgo(article.publishedAt),
+          text = publishedTimeFormatted,
           modifier = Modifier.padding(top = 8.dp),
           style = MaterialTheme.typography.labelSmall,
         )

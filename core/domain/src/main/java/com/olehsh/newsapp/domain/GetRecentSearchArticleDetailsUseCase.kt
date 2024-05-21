@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.olehsh.newsapp.data.repository.home
+package com.olehsh.newsapp.domain
 
-import androidx.paging.PagingData
+import com.olehsh.newsapp.data.repository.search.SearchRepository
 import com.olehsh.newsapp.model.NewsArticle
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-interface HomeRepository {
-
-  fun fetchTopHeadlines(): Flow<List<NewsArticle>>
-
-  suspend fun syncHeadlines()
-
-  fun fetchNewsList(): Flow<PagingData<NewsArticle>>
-
-  fun searchArticles(query: String): Flow<PagingData<NewsArticle>>
+class GetRecentSearchArticleDetailsUseCase @Inject constructor(
+  private val searchRepository: SearchRepository,
+) {
+  operator fun invoke(articleId: String): Flow<NewsArticle> {
+    return searchRepository.getSearchArticleDetailsById(articleId)
+  }
 }

@@ -63,4 +63,8 @@ class HomeRepositoryImpl @Inject constructor(
     },
     remoteMediator = NewsArticlesRemoteMediator(newsApi, appDatabase),
   ).flow.map { it.map { article -> article.asDomain() } }
+
+  override fun searchArticles(query: String): Flow<PagingData<NewsArticle>> {
+    TODO("Not yet implemented")
+  }
 }

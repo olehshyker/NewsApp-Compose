@@ -2,4 +2,7 @@
 <resources>
     <string name="app_name">All News</string>
     <string name="daily_news">Daily News</string>
+    <string name="search">Search</string>
+    <string name="hint">Start typing..</string>
+    <string name="txt_search_not_found">Sorry, there are no articles found for your search \"%1$s\"</string>
 </resources>
