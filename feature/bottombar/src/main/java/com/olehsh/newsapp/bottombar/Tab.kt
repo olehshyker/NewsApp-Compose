@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.olehsh.newsapp.home.ui
+package com.olehsh.newsapp.bottombar
 
-sealed interface HomeUiState {
-
-  data object Idle : HomeUiState
-
-  data object Loading : HomeUiState
-
-  data class Error(val message: String?) : HomeUiState
+enum class Tab(
+  val label: String,
+  val icon: Int,
+  val route: String,
+) {
+  HOME(label = "Home", icon = R.drawable.ic_home_24, "home_route"),
+  SEARCH(label = "Search", icon = R.drawable.ic_search_24, "search_route"),
+  BOOKMARKS(label = "Bookmarks", icon = R.drawable.ic_bookmarks_24, "bookmarks_route"),
 }

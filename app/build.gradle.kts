@@ -47,6 +47,7 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.feature.home)
     implementation(projects.feature.details)
+    implementation(projects.feature.bottombar)
     // compose
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.ui)
