@@ -64,6 +64,7 @@ fun HomeScreen(
     headlinesList = headlinesList,
     lazyPagingItems = lazyPagingItems,
     onArticleClicked = onArticleClicked,
+    onBookmarkClicked = homeViewModel::updateBookmark,
   )
 }
 
@@ -74,6 +75,7 @@ internal fun HomeContent(
   headlinesList: List<NewsArticle>,
   lazyPagingItems: LazyPagingItems<NewsArticle>,
   onArticleClicked: (String) -> Unit,
+  onBookmarkClicked: (String) -> Unit,
 ) {
   val pagerState = rememberPagerState(pageCount = { headlinesList.size })
   val context = LocalContext.current
@@ -121,6 +123,9 @@ internal fun HomeContent(
             publishedTimeFormatted = context.toTimeAgo(article.publishedAt),
             onArticleClicked = {
               onArticleClicked.invoke(it)
+            },
+            onBookmarkClicked = {
+              onBookmarkClicked.invoke(it)
             },
           )
         }

@@ -76,4 +76,6 @@ class HomeViewModel @Inject constructor(
       syncTopHeadlinesUseCase()
     }
   }
+  fun updateBookmark(articleUrl: String) {
+  }
 }

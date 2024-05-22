@@ -52,6 +52,9 @@ class SearchViewModel @Inject constructor(
 
     fun onSearchTriggered(query: String) {
     }
+
+    fun updateBookmark(articleUrl: String) {
+    }
 }
 
 private const val SEARCH_QUERY_MIN_LENGTH = 2

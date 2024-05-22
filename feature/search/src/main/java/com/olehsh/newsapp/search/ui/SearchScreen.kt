@@ -63,6 +63,7 @@ fun SearchScreen(
         onArticleClicked = onArticleClicked,
         onSearchTriggered = searchViewModel::onSearchTriggered,
         onSearchQueryChanged = searchViewModel::onSearchQueryChange,
+        onBookmarkClicked = searchViewModel::updateBookmark
     )
 }
 
@@ -73,6 +74,7 @@ internal fun SearchContent(
     onArticleClicked: (String) -> Unit,
     onSearchQueryChanged: (String) -> Unit = {},
     onSearchTriggered: (String) -> Unit,
+    onBookmarkClicked: (String) -> Unit,
 ) {
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -105,6 +107,7 @@ internal fun SearchContent(
                         articles = searchUiState.articles,
                         onArticleClicked = onArticleClicked,
                         searchQuery = searchQuery,
+                        onBookmarkClicked = onBookmarkClicked
                     )
                 }
             }
@@ -220,6 +223,7 @@ fun EmptySearchResultBody(
 private fun SearchResultBody(
     articles: List<NewsArticle>,
     onArticleClicked: (String) -> Unit,
+    onBookmarkClicked: (String) -> Unit,
     searchQuery: String = "",
 ) {
 
@@ -245,6 +249,9 @@ private fun SearchResultBody(
                     publishedTimeFormatted = context.toTimeAgo(article.publishedAt),
                     onArticleClicked = {
                         onArticleClicked.invoke(it)
+                    },
+                    onBookmarkClicked = {
+                        onBookmarkClicked.invoke(it)
                     })
             })
     }

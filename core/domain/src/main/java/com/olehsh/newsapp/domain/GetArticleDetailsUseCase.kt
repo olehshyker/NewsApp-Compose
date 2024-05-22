@@ -23,13 +23,13 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetArticleDetailsUseCase @Inject constructor(
-    private val articleDetailsRepository: ArticleDetailsRepository,
-    private val searchRepository: SearchRepository,
+  private val articleDetailsRepository: ArticleDetailsRepository,
+  private val searchRepository: SearchRepository,
 ) {
-    operator fun invoke(articleId: String, sourceType: SourceType): Flow<NewsArticle> {
-        return when (sourceType) {
-            SourceType.SEARCH -> searchRepository.getSearchArticleDetailsById(articleId)
-            else -> articleDetailsRepository.getArticleDetailsById(articleId)
-        }
+  operator fun invoke(articleId: String, sourceType: SourceType): Flow<NewsArticle> {
+    return when (sourceType) {
+      SourceType.SEARCH -> searchRepository.getSearchArticleDetailsById(articleId)
+      else -> articleDetailsRepository.getArticleDetailsById(articleId)
     }
+  }
 }

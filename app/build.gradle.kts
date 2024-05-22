@@ -45,6 +45,7 @@ android {
 
 dependencies {
     implementation(projects.core.designsystem)
+    implementation(projects.core.model)
     implementation(projects.feature.home)
     implementation(projects.feature.details)
     implementation(projects.feature.bottombar)
