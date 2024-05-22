@@ -15,6 +15,8 @@
  */
 package com.olehsh.newsapp.data.di
 
+import com.olehsh.newsapp.data.repository.bookmarks.BookmarksRepository
+import com.olehsh.newsapp.data.repository.bookmarks.BookmarksRepositoryImpl
 import com.olehsh.newsapp.data.repository.details.ArticleDetailsRepository
 import com.olehsh.newsapp.data.repository.details.ArticleDetailsRepositoryImpl
 import com.olehsh.newsapp.data.repository.home.HomeRepository
@@ -38,4 +40,7 @@ abstract class DataModule {
 
   @Binds
   internal abstract fun bindsSearchRepository(searchRepository: SearchRepositoryImpl): SearchRepository
+
+  @Binds
+  internal abstract fun bindsBookmarksRepository(bookmarksRepositoryImpl: BookmarksRepositoryImpl): BookmarksRepository
 }

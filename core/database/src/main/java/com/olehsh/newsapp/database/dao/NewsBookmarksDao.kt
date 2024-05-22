@@ -11,14 +11,16 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NewsBookmarksDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertBookmark(bookmarkEntity: NewsBookmarkEntity)
+    fun insertBookmark(bookmarkEntity: NewsBookmarkEntity)
 
     @Query("SELECT * FROM news_bookmarks")
-    suspend fun getAllBookmarksList(): Flow<List<NewsBookmarkEntity>>
+    fun getAllBookmarksList(): Flow<List<NewsBookmarkEntity>>
 
     @Query("SELECT * FROM news_bookmarks WHERE url = :url")
     fun getArticleDetailsById(url: String): Flow<NewsBookmarkEntity>
 
     @Query("DELETE FROM news_bookmarks")
-    suspend fun clearBookmarks()
+    fun clearBookmarks()
+    @Query("DELETE FROM news_bookmarks WHERE url = :articleId")
+    fun removeFromBookmarksById(articleId: String)
 }

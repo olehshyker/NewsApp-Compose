@@ -14,7 +14,26 @@ interface NewsArticlesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertArticlesList(articlesList: List<NewsArticleEntity>)
 
-    @Query("SELECT * FROM news_articles WHERE isHeadLine = 0")
+    @Query("""
+        SELECT 
+    a.author,
+    a.content,
+    a.description,
+    a.publishedAt,
+    a.source_id,
+    a.source_name,
+    a.title,
+    a.url,
+    a.imageUrl,
+    a.isHeadLine,
+    CASE 
+        WHEN b.url IS NOT NULL THEN 1
+        ELSE 0
+    END AS isBookmarked
+FROM news_articles a
+LEFT JOIN news_bookmarks b
+ON a.url = b.url
+    """)
     fun getPagingArticlesList(): PagingSource<Int, NewsArticleEntity>
     @Query("SELECT * FROM news_articles WHERE isHeadLine = 1")
     fun getHeadlinesArticlesList(): Flow<List<NewsArticleEntity>>

@@ -13,21 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.olehsh.newsapp.model
+package com.olehsh.newsapp.data.repository.bookmarks
 
-data class NewsArticle(
-  val author: String,
-  val content: String,
-  val description: String,
-  val publishedAt: String,
-  val source: ArticleSource,
-  val title: String,
-  val url: String,
-  val imageUrl: String,
-  val isBookmarked: Boolean = false,
-)
+import com.olehsh.newsapp.model.NewsArticle
+import kotlinx.coroutines.flow.Flow
 
-data class ArticleSource(
-  val id: String? = null,
-  val name: String? = null,
-)
+interface BookmarksRepository {
+
+  fun addToBookmarks(article: NewsArticle)
+
+  fun removeFromBookmarks(articleId: String)
+  fun getBookmarkedArticles(): Flow<List<NewsArticle>>
+
+  fun getBookmarkedArticleDetailsById(articleId: String): Flow<NewsArticle>
+}

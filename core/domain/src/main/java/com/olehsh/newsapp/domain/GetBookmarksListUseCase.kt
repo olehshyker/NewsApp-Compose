@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.olehsh.newsapp.model
+package com.olehsh.newsapp.domain
 
-data class NewsArticle(
-  val author: String,
-  val content: String,
-  val description: String,
-  val publishedAt: String,
-  val source: ArticleSource,
-  val title: String,
-  val url: String,
-  val imageUrl: String,
-  val isBookmarked: Boolean = false,
-)
+import com.olehsh.newsapp.data.repository.bookmarks.BookmarksRepository
+import com.olehsh.newsapp.model.NewsArticle
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-data class ArticleSource(
-  val id: String? = null,
-  val name: String? = null,
-)
+class GetBookmarksListUseCase @Inject constructor(
+  private val bookmarksRepository: BookmarksRepository,
+) {
+
+  operator fun invoke(): Flow<List<NewsArticle>> {
+    return bookmarksRepository.getBookmarkedArticles()
+  }
+}

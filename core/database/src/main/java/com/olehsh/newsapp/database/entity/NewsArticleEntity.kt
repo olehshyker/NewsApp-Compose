@@ -16,6 +16,7 @@ data class NewsArticleEntity(
     val url: String,
     val imageUrl: String,
     val isHeadLine: Int = 0,
+    val isBookmarked: Int = 0,
 )
 
 data class ArticleSourceEntity(

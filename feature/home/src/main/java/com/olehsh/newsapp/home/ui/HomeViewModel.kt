@@ -19,11 +19,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.olehsh.newsapp.domain.GetBookmarksListUseCase
 import com.olehsh.newsapp.domain.GetNewsListUseCase
 import com.olehsh.newsapp.domain.GetTopHeadlinesUseCase
 import com.olehsh.newsapp.domain.SyncTopHeadlinesUseCase
+import com.olehsh.newsapp.domain.UpdateBookmarkUseCase
 import com.olehsh.newsapp.model.NewsArticle
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -40,6 +43,8 @@ class HomeViewModel @Inject constructor(
   getTopHeadlinesUseCase: GetTopHeadlinesUseCase,
   private val syncTopHeadlinesUseCase: SyncTopHeadlinesUseCase,
   getNewsListUseCase: GetNewsListUseCase,
+  private val updateBookmarkUseCase: UpdateBookmarkUseCase,
+  getBookmarksListUseCase: GetBookmarksListUseCase,
 ) : ViewModel() {
   init {
     syncHeadLines()
@@ -76,6 +81,9 @@ class HomeViewModel @Inject constructor(
       syncTopHeadlinesUseCase()
     }
   }
-  fun updateBookmark(articleUrl: String) {
+  fun updateBookmark(article: NewsArticle) {
+    viewModelScope.launch(Dispatchers.IO) {
+      updateBookmarkUseCase(article)
+    }
   }
 }
