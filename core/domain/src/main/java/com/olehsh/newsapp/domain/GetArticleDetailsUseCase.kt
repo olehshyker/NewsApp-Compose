@@ -15,6 +15,7 @@
  */
 package com.olehsh.newsapp.domain
 
+import com.olehsh.newsapp.data.repository.bookmarks.BookmarksRepository
 import com.olehsh.newsapp.data.repository.details.ArticleDetailsRepository
 import com.olehsh.newsapp.data.repository.search.SearchRepository
 import com.olehsh.newsapp.model.NewsArticle
@@ -25,10 +26,12 @@ import javax.inject.Inject
 class GetArticleDetailsUseCase @Inject constructor(
   private val articleDetailsRepository: ArticleDetailsRepository,
   private val searchRepository: SearchRepository,
+  private val bookmarksRepository: BookmarksRepository,
 ) {
   operator fun invoke(articleId: String, sourceType: SourceType): Flow<NewsArticle> {
     return when (sourceType) {
       SourceType.SEARCH -> searchRepository.getSearchArticleDetailsById(articleId)
+      SourceType.BOOKMARKS -> bookmarksRepository.getBookmarkedArticleDetailsById(articleId)
       else -> articleDetailsRepository.getArticleDetailsById(articleId)
     }
   }

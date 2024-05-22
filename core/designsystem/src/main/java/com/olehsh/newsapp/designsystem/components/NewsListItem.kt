@@ -38,6 +38,7 @@ import com.olehsh.newsapp.designsystem.R
 
 @Composable
 fun NewsListItem(
+  modifier: Modifier = Modifier,
   title: String,
   description: String,
   articleUrl: String,
@@ -48,7 +49,7 @@ fun NewsListItem(
   onBookmarkClicked: (String) -> Unit,
 ) {
   Card(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxWidth()
       .padding(8.dp)
       .clickable(onClick = { onArticleClicked(articleUrl) }),

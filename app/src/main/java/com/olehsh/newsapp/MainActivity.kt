@@ -31,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.olehsh.newsapp.bookmarks.navigation.navigateToBookmarks
 import com.olehsh.newsapp.bottombar.Tab
 import com.olehsh.newsapp.bottombar.components.AppNavigationBar
 import com.olehsh.newsapp.bottombar.components.AppNavigationBarItem
@@ -70,7 +71,7 @@ class MainActivity : ComponentActivity() {
                       }
 
                       Tab.BOOKMARKS -> {
-                        /* TODO */
+                        navHostController.navigateToBookmarks()
                       }
                     }
                   },

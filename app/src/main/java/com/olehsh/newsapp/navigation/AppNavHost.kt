@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.olehsh.newsapp.bookmarks.navigation.bookmarksScreen
 import com.olehsh.newsapp.home.navigation.HOME_ROUTE
 import com.olehsh.newsapp.home.navigation.articleDetailsScreen
 import com.olehsh.newsapp.home.navigation.homeScreen
@@ -48,5 +49,11 @@ fun AppNavHost(
       },
     )
     articleDetailsScreen(onBackClicked = { navController.navigateUp() })
+
+    bookmarksScreen(
+      onArticleClicked = {
+        navController.navigateToDetails(it, sourceType = SourceType.BOOKMARKS)
+      },
+    )
   }
 }

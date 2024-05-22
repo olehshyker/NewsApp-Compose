@@ -24,20 +24,21 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 internal class BookmarksRepositoryImpl @Inject constructor(private val bookmarksDao: NewsBookmarksDao) :
-  BookmarksRepository {
-  override fun addToBookmarks(article: NewsArticle) {
-    bookmarksDao.insertBookmark(article.asBookmarkEntity())
-  }
+    BookmarksRepository {
+    override fun addToBookmarks(article: NewsArticle) {
+        bookmarksDao.insertBookmark(article.asBookmarkEntity())
+    }
 
-  override fun removeFromBookmarks(articleId: String) {
-    bookmarksDao.removeFromBookmarksById(articleId)
-  }
+    override fun removeFromBookmarks(articleId: String) {
+        bookmarksDao.removeFromBookmarksById(articleId)
+    }
 
-  override fun getBookmarkedArticles(): Flow<List<NewsArticle>> {
-    return bookmarksDao.getAllBookmarksList().map { list -> list.map { it.asDomain() } }
-  }
+    override fun getBookmarkedArticles(): Flow<List<NewsArticle>> {
+        return bookmarksDao.getAllBookmarksList()
+            .map { list -> list.map { it.asDomain() }.map { it.copy(isBookmarked = true) } }
+    }
 
-  override fun getBookmarkedArticleDetailsById(articleId: String): Flow<NewsArticle> {
-    return bookmarksDao.getArticleDetailsById(articleId).map { it.asDomain() }
-  }
+    override fun getBookmarkedArticleDetailsById(articleId: String): Flow<NewsArticle> {
+        return bookmarksDao.getArticleDetailsById(articleId).map { it.asDomain() }
+    }
 }
