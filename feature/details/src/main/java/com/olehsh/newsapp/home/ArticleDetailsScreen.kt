@@ -18,13 +18,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.olehsh.newsapp.designsystem.R
 import com.olehsh.newsapp.designsystem.components.CoilAsyncImage
 import com.olehsh.newsapp.designsystem.components.NewsAppBar
+import com.olehsh.newsapp.model.NewsArticle
 
 
 @Composable
@@ -35,13 +38,17 @@ fun ArticleDetailsScreen(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    ArticleDetailsContent(uiState, onBackClicked)
+    ArticleDetailsContent(
+        uiState = uiState,
+        onBackClicked = onBackClicked,
+        onBookmarkClicked = viewModel::updateBookmark)
 }
 
 @Composable
 internal fun ArticleDetailsContent(
     uiState: ArticleDetailsUiState,
-    onBackClicked: () -> Unit = {}
+    onBackClicked: () -> Unit = {},
+    onBookmarkClicked: (NewsArticle) -> Unit = {},
 ) {
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -50,6 +57,16 @@ internal fun ArticleDetailsContent(
             navigationIcon = {
                 IconButton(onClick = { onBackClicked.invoke() }) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, "back")
+                }
+            },
+            actions = {
+                if (uiState is ArticleDetailsUiState.Success) {
+                    IconButton(onClick = { onBookmarkClicked(uiState.newsArticle) }) {
+                        Icon(
+                            painter = painterResource(id = if (uiState.newsArticle.isBookmarked) R.drawable.ic_bookmark_checked else R.drawable.ic_bookmark_unchecked),
+                            contentDescription = "",
+                        )
+                    }
                 }
             }
         )

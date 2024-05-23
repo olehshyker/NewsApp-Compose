@@ -21,6 +21,7 @@ import com.olehsh.newsapp.data.repository.search.SearchRepository
 import com.olehsh.newsapp.model.NewsArticle
 import com.olehsh.newsapp.model.SourceType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 class GetArticleDetailsUseCase @Inject constructor(
@@ -33,6 +34,8 @@ class GetArticleDetailsUseCase @Inject constructor(
       SourceType.SEARCH -> searchRepository.getSearchArticleDetailsById(articleId)
       SourceType.BOOKMARKS -> bookmarksRepository.getBookmarkedArticleDetailsById(articleId)
       else -> articleDetailsRepository.getArticleDetailsById(articleId)
+    }.combine(bookmarksRepository.isBookmarked(articleId)) { articleDetails, isBookmarked ->
+      articleDetails.copy(isBookmarked = isBookmarked)
     }
   }
 }

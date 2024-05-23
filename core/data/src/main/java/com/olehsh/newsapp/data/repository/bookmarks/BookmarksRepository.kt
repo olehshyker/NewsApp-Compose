@@ -26,4 +26,5 @@ interface BookmarksRepository {
   fun getBookmarkedArticles(): Flow<List<NewsArticle>>
 
   fun getBookmarkedArticleDetailsById(articleId: String): Flow<NewsArticle>
+  fun isBookmarked(articleId: String): Flow<Boolean>
 }

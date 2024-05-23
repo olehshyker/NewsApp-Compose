@@ -6,19 +6,24 @@ import androidx.lifecycle.viewModelScope
 import com.olehsh.newsapp.common.Result
 import com.olehsh.newsapp.common.asResult
 import com.olehsh.newsapp.domain.GetArticleDetailsUseCase
+import com.olehsh.newsapp.domain.UpdateBookmarkUseCase
 import com.olehsh.newsapp.home.navigation.ArticleDetailsArgs
+import com.olehsh.newsapp.model.NewsArticle
 import com.olehsh.newsapp.model.SourceType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ArticleDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     getArticleDetailsUseCase: GetArticleDetailsUseCase,
+    private val updateBookmarkUseCase: UpdateBookmarkUseCase,
 ) : ViewModel() {
 
     private val args: ArticleDetailsArgs by lazy { ArticleDetailsArgs(savedStateHandle = savedStateHandle) }
@@ -37,4 +42,10 @@ class ArticleDetailsViewModel @Inject constructor(
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = ArticleDetailsUiState.Idle,
             )
+
+    fun updateBookmark(article: NewsArticle) {
+        viewModelScope.launch(Dispatchers.IO) {
+            updateBookmarkUseCase(article)
+        }
+    }
 }

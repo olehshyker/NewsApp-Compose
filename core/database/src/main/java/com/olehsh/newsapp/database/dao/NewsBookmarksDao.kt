@@ -23,4 +23,6 @@ interface NewsBookmarksDao {
     fun clearBookmarks()
     @Query("DELETE FROM news_bookmarks WHERE url = :articleId")
     fun removeFromBookmarksById(articleId: String)
+    @Query("SELECT EXISTS(SELECT * FROM news_bookmarks WHERE url = :articleId)")
+    fun isBookmarked(articleId: String): Flow<Boolean>
 }
