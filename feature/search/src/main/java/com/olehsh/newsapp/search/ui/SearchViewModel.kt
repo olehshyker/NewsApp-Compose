@@ -3,24 +3,31 @@ package com.olehsh.newsapp.search.ui
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
 import com.olehsh.newsapp.common.Result.Error
 import com.olehsh.newsapp.common.Result.Loading
 import com.olehsh.newsapp.common.Result.Success
 import com.olehsh.newsapp.common.asResult
+import com.olehsh.newsapp.domain.GetBookmarksListUseCase
 import com.olehsh.newsapp.domain.SearchArticlesUseCase
+import com.olehsh.newsapp.domain.UpdateBookmarkUseCase
+import com.olehsh.newsapp.model.NewsArticle
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchArticlesUseCase: SearchArticlesUseCase,
+    private val getBookmarksListUseCase: GetBookmarksListUseCase,
+    private val updateBookmarkUseCase: UpdateBookmarkUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
@@ -30,8 +37,9 @@ class SearchViewModel @Inject constructor(
         if (query.length < SEARCH_QUERY_MIN_LENGTH) {
             flowOf(SearchUiState.EmptyQuery)
         } else {
-            searchArticlesUseCase(query)
-                .asResult()
+            combine(getBookmarksListUseCase(), searchArticlesUseCase(query)) { bookmarks, searchList ->
+                searchList.map { it.copy(isBookmarked = bookmarks.any { bookmark -> it.url == bookmark.url }) }
+            }.asResult()
                 .map { result ->
                     when (result) {
                         is Error -> SearchUiState.Error(result.exception?.message)
@@ -53,7 +61,10 @@ class SearchViewModel @Inject constructor(
     fun onSearchTriggered(query: String) {
     }
 
-    fun updateBookmark(articleUrl: String) {
+    fun updateBookmark(article: NewsArticle) {
+        viewModelScope.launch(Dispatchers.IO) {
+            updateBookmarkUseCase(article)
+        }
     }
 }
 

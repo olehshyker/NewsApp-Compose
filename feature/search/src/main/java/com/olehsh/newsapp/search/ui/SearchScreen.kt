@@ -74,7 +74,7 @@ internal fun SearchContent(
     onArticleClicked: (String) -> Unit,
     onSearchQueryChanged: (String) -> Unit = {},
     onSearchTriggered: (String) -> Unit,
-    onBookmarkClicked: (String) -> Unit,
+    onBookmarkClicked: (NewsArticle) -> Unit,
 ) {
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -223,7 +223,7 @@ fun EmptySearchResultBody(
 private fun SearchResultBody(
     articles: List<NewsArticle>,
     onArticleClicked: (String) -> Unit,
-    onBookmarkClicked: (String) -> Unit,
+    onBookmarkClicked: (NewsArticle) -> Unit,
     searchQuery: String = "",
 ) {
 
@@ -247,11 +247,12 @@ private fun SearchResultBody(
                     articleUrl = article.url,
                     imageUrl = article.imageUrl,
                     publishedTimeFormatted = context.toTimeAgo(article.publishedAt),
+                    isBookmarked = article.isBookmarked,
                     onArticleClicked = {
                         onArticleClicked.invoke(it)
                     },
                     onBookmarkClicked = {
-                        onBookmarkClicked.invoke(it)
+                        onBookmarkClicked.invoke(article)
                     })
             })
     }
