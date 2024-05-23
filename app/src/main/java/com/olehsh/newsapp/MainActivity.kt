@@ -31,14 +31,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.olehsh.newsapp.bookmarks.navigation.navigateToBookmarks
 import com.olehsh.newsapp.bottombar.Tab
 import com.olehsh.newsapp.bottombar.components.AppNavigationBar
 import com.olehsh.newsapp.bottombar.components.AppNavigationBarItem
 import com.olehsh.newsapp.designsystem.theme.NewsAppTheme
-import com.olehsh.newsapp.home.navigation.navigateToHome
 import com.olehsh.newsapp.navigation.AppNavHost
-import com.olehsh.newsapp.search.navigation.navigateToSearch
+import com.olehsh.newsapp.navigation.navigateToTopLevelDestination
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -64,16 +62,7 @@ class MainActivity : ComponentActivity() {
                   onSelected = { currentRoute == tab.route },
                   onClick = {
                     if (currentRoute == tab.route) return@AppNavigationBarItem
-                    when (tab) {
-                      Tab.HOME -> navHostController.navigateToHome()
-                      Tab.SEARCH -> {
-                        navHostController.navigateToSearch()
-                      }
-
-                      Tab.BOOKMARKS -> {
-                        navHostController.navigateToBookmarks()
-                      }
-                    }
+                    navHostController.navigateToTopLevelDestination(tab)
                   },
                   icon = {
                     Icon(
