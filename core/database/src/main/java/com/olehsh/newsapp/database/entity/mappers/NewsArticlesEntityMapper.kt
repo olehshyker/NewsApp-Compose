@@ -17,6 +17,7 @@ object NewsArticleEntityMapper : EntityMapper<NewsArticle, NewsArticleEntity> {
       title = domain.title,
       url = domain.url,
       imageUrl = domain.imageUrl,
+      isBookmarked = if(domain.isBookmarked) 1 else 0,
     )
   }
 
@@ -30,6 +31,7 @@ object NewsArticleEntityMapper : EntityMapper<NewsArticle, NewsArticleEntity> {
       title = entity.title,
       url = entity.url,
       imageUrl = entity.imageUrl,
+      isBookmarked = entity.isBookmarked == 1
     )
   }
 }

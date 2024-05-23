@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class SearchRepositoryImpl @Inject constructor(
+internal class SearchRepositoryImpl @Inject constructor(
   private val newsApi: NewsApi,
   private val recentNewsSearchDao: RecentNewsSearchDao,
 ) : SearchRepository {

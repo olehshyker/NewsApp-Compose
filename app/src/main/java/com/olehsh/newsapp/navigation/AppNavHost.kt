@@ -17,13 +17,21 @@ package com.olehsh.newsapp.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.navOptions
+import com.olehsh.newsapp.bookmarks.navigation.bookmarksScreen
+import com.olehsh.newsapp.bookmarks.navigation.navigateToBookmarks
+import com.olehsh.newsapp.bottombar.Tab
 import com.olehsh.newsapp.home.navigation.HOME_ROUTE
-import com.olehsh.newsapp.home.navigation.SourceType
 import com.olehsh.newsapp.home.navigation.articleDetailsScreen
 import com.olehsh.newsapp.home.navigation.homeScreen
 import com.olehsh.newsapp.home.navigation.navigateToDetails
+import com.olehsh.newsapp.home.navigation.navigateToHome
+import com.olehsh.newsapp.model.SourceType
+import com.olehsh.newsapp.search.navigation.navigateToSearch
 import com.olehsh.newsapp.search.navigation.searchScreen
 
 @Composable
@@ -48,5 +56,27 @@ fun AppNavHost(
       },
     )
     articleDetailsScreen(onBackClicked = { navController.navigateUp() })
+
+    bookmarksScreen(
+      onArticleClicked = {
+        navController.navigateToDetails(it, sourceType = SourceType.BOOKMARKS)
+      },
+    )
+  }
+}
+
+fun NavController.navigateToTopLevelDestination(tab: Tab) {
+  val navOptions = navOptions {
+    popUpTo(graph.findStartDestination().id) {
+      inclusive = true
+    }
+    launchSingleTop = true
+    restoreState = true
+  }
+
+  when (tab) {
+    Tab.HOME -> navigateToHome(navOptions)
+    Tab.SEARCH -> navigateToSearch(navOptions)
+    Tab.BOOKMARKS -> navigateToBookmarks(navOptions)
   }
 }

@@ -1,4 +1,4 @@
-package com.olehsh.newsapp.search.ui
+package com.olehsh.newsapp.bookmarks.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -49,49 +49,35 @@ import com.olehsh.newsapp.designsystem.components.NewsListItem
 import com.olehsh.newsapp.model.NewsArticle
 
 @Composable
-fun SearchScreen(
-    searchViewModel: SearchViewModel = hiltViewModel(),
+fun BookmarksScreen(
+    bookmarksViewModel: BookmarksViewModel = hiltViewModel(),
     onArticleClicked: (String) -> Unit = {},
 ) {
 
-    val searchUiState by searchViewModel.searchUiState.collectAsStateWithLifecycle()
-    val searchQuery by searchViewModel.searchQuery.collectAsStateWithLifecycle()
+    val uiState by bookmarksViewModel.uiState.collectAsStateWithLifecycle()
 
-    SearchContent(
-        searchUiState = searchUiState,
-        searchQuery = searchQuery,
+    BookmarksContent(
+        uiState = uiState,
         onArticleClicked = onArticleClicked,
-        onSearchTriggered = searchViewModel::onSearchTriggered,
-        onSearchQueryChanged = searchViewModel::onSearchQueryChange,
-        onBookmarkClicked = searchViewModel::updateBookmark
+        onBookmarkClicked = bookmarksViewModel::updateBookmark
     )
 }
 
 @Composable
-internal fun SearchContent(
-    searchUiState: SearchUiState,
-    searchQuery: String = "",
+internal fun BookmarksContent(
+    uiState: BookmarksUiState,
     onArticleClicked: (String) -> Unit,
-    onSearchQueryChanged: (String) -> Unit = {},
-    onSearchTriggered: (String) -> Unit,
     onBookmarkClicked: (NewsArticle) -> Unit,
 ) {
 
     Column(modifier = Modifier.fillMaxSize()) {
 
-        NewsAppBar(title = stringResource(id = R.string.search))
+        NewsAppBar(title = stringResource(id = R.string.bookmarks))
 
-        SearchTextField(
-            onSearchQueryChanged = onSearchQueryChanged,
-            onSearchTriggered = onSearchTriggered,
-            searchQuery = searchQuery,
-        )
+        when (uiState) {
+            is BookmarksUiState.Error -> Unit
 
-        when (searchUiState) {
-            SearchUiState.EmptyQuery,
-            is SearchUiState.Error -> Unit
-
-            SearchUiState.Loading -> {
+            BookmarksUiState.Loading -> {
                 CircularProgressIndicator(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -99,14 +85,13 @@ internal fun SearchContent(
                 )
             }
 
-            is SearchUiState.Success -> {
-                if (searchUiState.articles.isEmpty()) {
-                    EmptySearchResultBody(searchQuery = searchQuery)
+            is BookmarksUiState.Success -> {
+                if (uiState.articles.isEmpty()) {
+                    EmptyResultBody()
                 } else {
-                    SearchResultBody(
-                        articles = searchUiState.articles,
+                    BookmarksResultBody(
+                        articles = uiState.articles,
                         onArticleClicked = onArticleClicked,
-                        searchQuery = searchQuery,
                         onBookmarkClicked = onBookmarkClicked
                     )
                 }
@@ -114,104 +99,16 @@ internal fun SearchContent(
         }
     }
 }
-
 @Composable
-fun SearchTextField(
-    modifier: Modifier = Modifier,
-    onSearchQueryChanged: (String) -> Unit,
-    searchQuery: String,
-    onSearchTriggered: (String) -> Unit,
-) {
-    val focusRequester = remember {
-        FocusRequester()
-    }
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-    val onSearchExplicitlyTriggered = {
-        keyboardController?.hide()
-        onSearchTriggered(searchQuery)
-    }
-
-    TextField(
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-        ),
-        leadingIcon = {
-            Icon(
-                imageVector = Icons.Rounded.Search,
-                contentDescription = "",
-                tint = MaterialTheme.colorScheme.onSurface
-            )
-        },
-        trailingIcon = {
-            if (searchQuery.isNotEmpty()) {
-                IconButton(onClick = { onSearchQueryChanged("") }) {
-                    Icon(
-                        imageVector = Icons.Rounded.Close,
-                        contentDescription = "",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            }
-        },
-        value = searchQuery,
-        onValueChange = { value ->
-            if (!value.contains("\n")) {
-                onSearchQueryChanged(value)
-            }
-        },
-        placeholder = {
-                Text(text = stringResource(id = R.string.hint))
-        },
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .focusRequester(focusRequester)
-            .onKeyEvent {
-                if (it.key == Key.Enter) {
-                    onSearchExplicitlyTriggered()
-                    true
-                } else {
-                    false
-                }
-            },
-        shape = RoundedCornerShape(32.dp),
-        keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Search
-        ),
-        keyboardActions = KeyboardActions(
-            onSearch = {
-                onSearchExplicitlyTriggered()
-            }
-        ),
-        maxLines = 1,
-        singleLine = true
-    )
-}
-
-@Composable
-fun EmptySearchResultBody(
-    searchQuery: String,
+fun EmptyResultBody(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(horizontal = 48.dp),
     ) {
-        val message = stringResource(id = R.string.txt_search_not_found, searchQuery)
-        val start = message.indexOf(searchQuery)
+        val message = stringResource(id = R.string.txt_bookmarks_not_found)
         Text(
-            text = AnnotatedString(
-                text = message,
-                spanStyles = listOf(
-                    AnnotatedString.Range(
-                        SpanStyle(fontWeight = FontWeight.Bold),
-                        start = start,
-                        end = start + searchQuery.length,
-                    ),
-                ),
-            ),
+            text = message,
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(vertical = 24.dp),
@@ -220,11 +117,10 @@ fun EmptySearchResultBody(
 }
 
 @Composable
-private fun SearchResultBody(
+private fun BookmarksResultBody(
     articles: List<NewsArticle>,
     onArticleClicked: (String) -> Unit,
     onBookmarkClicked: (NewsArticle) -> Unit,
-    searchQuery: String = "",
 ) {
 
     val context = LocalContext.current
@@ -242,15 +138,16 @@ private fun SearchResultBody(
             itemContent = { index ->
                 val article = articles[index]
                 NewsListItem(
+                    modifier = Modifier.animateItem(),
                     title = article.title,
                     description = article.description,
                     articleUrl = article.url,
                     imageUrl = article.imageUrl,
                     publishedTimeFormatted = context.toTimeAgo(article.publishedAt),
-                    isBookmarked = article.isBookmarked,
                     onArticleClicked = {
                         onArticleClicked.invoke(it)
                     },
+                    isBookmarked = article.isBookmarked,
                     onBookmarkClicked = {
                         onBookmarkClicked.invoke(article)
                     })

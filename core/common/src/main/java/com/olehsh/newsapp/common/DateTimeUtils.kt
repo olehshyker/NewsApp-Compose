@@ -1,11 +1,13 @@
 package com.olehsh.newsapp.common
 
 import android.content.Context
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-const val DEFAULT_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+const val DEFAULT_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+const val FALLBACK_DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ssXXX"
 
 private const val SECOND = 1
 private const val MINUTE = 60 * SECOND
@@ -18,9 +20,13 @@ fun Context.toTimeAgo(dateString: String, inputDatePattern: String = DEFAULT_DAT
 
     val now = Calendar.getInstance().timeInMillis
 
-    val dateFormat = SimpleDateFormat(inputDatePattern, Locale.getDefault())
-
-    val diff = (now - (dateFormat.parse(dateString)?.time ?: 0L)) / 1000
+    val diff: Long = try {
+        val dateFormat = SimpleDateFormat(inputDatePattern, Locale.getDefault())
+        (now - (dateFormat.parse(dateString)?.time ?: 0L)) / 1000
+    } catch (e: ParseException) {
+        val fallbackDateFormat = SimpleDateFormat(FALLBACK_DATE_PATTERN, Locale.getDefault())
+        (now - (fallbackDateFormat.parse(dateString)?.time ?: 0L)) / 1000
+    }
 
     return when {
         diff < MINUTE -> getString(R.string.txt_just_now)
@@ -35,4 +41,5 @@ fun Context.toTimeAgo(dateString: String, inputDatePattern: String = DEFAULT_DAT
         diff < 2 * YEAR -> getString(R.string.txt_year_ago)
         else -> getString(R.string.txt_years_ago_format, (diff / YEAR).toInt())
     }
+
 }

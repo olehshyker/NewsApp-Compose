@@ -64,6 +64,7 @@ fun HomeScreen(
     headlinesList = headlinesList,
     lazyPagingItems = lazyPagingItems,
     onArticleClicked = onArticleClicked,
+    onBookmarkClicked = homeViewModel::updateBookmark,
   )
 }
 
@@ -74,6 +75,7 @@ internal fun HomeContent(
   headlinesList: List<NewsArticle>,
   lazyPagingItems: LazyPagingItems<NewsArticle>,
   onArticleClicked: (String) -> Unit,
+  onBookmarkClicked: (NewsArticle) -> Unit,
 ) {
   val pagerState = rememberPagerState(pageCount = { headlinesList.size })
   val context = LocalContext.current
@@ -122,6 +124,10 @@ internal fun HomeContent(
             onArticleClicked = {
               onArticleClicked.invoke(it)
             },
+            onBookmarkClicked = {
+              onBookmarkClicked.invoke(article)
+            },
+            isBookmarked = article.isBookmarked,
           )
         }
       }
@@ -151,7 +157,7 @@ fun PreviewHeadLineCard() {
     title = "Rutland: Hundreds attend Queen Elizabeth II statue unveiling",
     url = "https://www.bbc.co.uk/news/uk-england-leicestershire-68870129",
     imageUrl = "https://ichef.bbci.co.uk/news/1024/branded_news/14730/production/_133206738_image-1.jpg",
-
+    isBookmarked = false,
   )
   HeadlineCard(
     article = article,

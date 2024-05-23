@@ -15,19 +15,6 @@
  */
 package com.olehsh.newsapp.model
 
-data class NewsArticle(
-  val author: String,
-  val content: String,
-  val description: String,
-  val publishedAt: String,
-  val source: ArticleSource,
-  val title: String,
-  val url: String,
-  val imageUrl: String,
-  val isBookmarked: Boolean = false,
-)
-
-data class ArticleSource(
-  val id: String? = null,
-  val name: String? = null,
-)
+enum class SourceType {
+  HOME, SEARCH, BOOKMARKS
+}

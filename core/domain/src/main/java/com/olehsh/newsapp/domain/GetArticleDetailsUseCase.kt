@@ -15,15 +15,27 @@
  */
 package com.olehsh.newsapp.domain
 
+import com.olehsh.newsapp.data.repository.bookmarks.BookmarksRepository
 import com.olehsh.newsapp.data.repository.details.ArticleDetailsRepository
+import com.olehsh.newsapp.data.repository.search.SearchRepository
 import com.olehsh.newsapp.model.NewsArticle
+import com.olehsh.newsapp.model.SourceType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 class GetArticleDetailsUseCase @Inject constructor(
   private val articleDetailsRepository: ArticleDetailsRepository,
+  private val searchRepository: SearchRepository,
+  private val bookmarksRepository: BookmarksRepository,
 ) {
-  operator fun invoke(articleId: String): Flow<NewsArticle> {
-    return articleDetailsRepository.getArticleDetailsById(articleId)
+  operator fun invoke(articleId: String, sourceType: SourceType): Flow<NewsArticle> {
+    return when (sourceType) {
+      SourceType.SEARCH -> searchRepository.getSearchArticleDetailsById(articleId)
+      SourceType.BOOKMARKS -> bookmarksRepository.getBookmarkedArticleDetailsById(articleId)
+      else -> articleDetailsRepository.getArticleDetailsById(articleId)
+    }.combine(bookmarksRepository.isBookmarked(articleId)) { articleDetails, isBookmarked ->
+      articleDetails.copy(isBookmarked = isBookmarked)
+    }
   }
 }

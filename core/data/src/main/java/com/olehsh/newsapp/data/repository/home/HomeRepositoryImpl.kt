@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class HomeRepositoryImpl @Inject constructor(
+internal class HomeRepositoryImpl @Inject constructor(
   private val newsApi: NewsApi,
   private val appDatabase: AppDatabase,
 ) : HomeRepository {

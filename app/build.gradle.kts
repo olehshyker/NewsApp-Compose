@@ -45,10 +45,12 @@ android {
 
 dependencies {
     implementation(projects.core.designsystem)
+    implementation(projects.core.model)
     implementation(projects.feature.home)
     implementation(projects.feature.details)
     implementation(projects.feature.bottombar)
     implementation(projects.feature.search)
+    implementation(projects.feature.bookmarks)
     // compose
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.ui)

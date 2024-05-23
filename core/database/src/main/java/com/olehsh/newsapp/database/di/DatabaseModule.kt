@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.olehsh.newsapp.database.AppDatabase
 import com.olehsh.newsapp.database.dao.NewsArticlesDao
 import com.olehsh.newsapp.database.dao.NewsArticlesRemoteKeysDao
+import com.olehsh.newsapp.database.dao.NewsBookmarksDao
 import com.olehsh.newsapp.database.dao.RecentNewsSearchDao
 import dagger.Module
 import dagger.Provides
@@ -43,5 +44,11 @@ internal object DatabaseModule {
     @Singleton
     fun provideRecentNewsSearchDao(appDatabase: AppDatabase): RecentNewsSearchDao {
         return appDatabase.recentNewsSearchDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideNewsBookmarksDao(appDatabase: AppDatabase): NewsBookmarksDao {
+        return appDatabase.newsBookmarksDao()
     }
 }

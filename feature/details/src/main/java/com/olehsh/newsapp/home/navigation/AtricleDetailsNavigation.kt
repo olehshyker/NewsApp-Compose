@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.olehsh.newsapp.home.ArticleDetailsScreen
 import com.olehsh.newsapp.model.NewsArticle
+import com.olehsh.newsapp.model.SourceType
 import java.net.URLDecoder
 import java.net.URLEncoder
 
@@ -49,8 +50,4 @@ fun NavGraphBuilder.articleDetailsScreen(onBackClicked: () -> Unit) {
     ) {
         ArticleDetailsScreen(onBackClicked = onBackClicked)
     }
-}
-
-enum class SourceType {
-    HOME, SEARCH, BOOKMARKS
 }

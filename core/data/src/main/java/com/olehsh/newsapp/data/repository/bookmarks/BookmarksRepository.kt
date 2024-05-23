@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.olehsh.newsapp.domain
+package com.olehsh.newsapp.data.repository.bookmarks
 
-import com.olehsh.newsapp.data.repository.search.SearchRepository
 import com.olehsh.newsapp.model.NewsArticle
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-class GetRecentSearchArticleDetailsUseCase @Inject constructor(
-  private val searchRepository: SearchRepository,
-) {
-  operator fun invoke(articleId: String): Flow<NewsArticle> {
-    return searchRepository.getSearchArticleDetailsById(articleId)
-  }
+interface BookmarksRepository {
+
+  fun addToBookmarks(article: NewsArticle)
+
+  fun removeFromBookmarks(articleId: String)
+  fun getBookmarkedArticles(): Flow<List<NewsArticle>>
+
+  fun getBookmarkedArticleDetailsById(articleId: String): Flow<NewsArticle>
+  fun isBookmarked(articleId: String): Flow<Boolean>
 }

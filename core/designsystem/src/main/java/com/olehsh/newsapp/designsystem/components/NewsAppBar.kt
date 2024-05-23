@@ -15,6 +15,7 @@
  */
 package com.olehsh.newsapp.designsystem.components
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 fun NewsAppBar(
   title: String = "",
   navigationIcon: @Composable () -> Unit = {},
+  actions: @Composable RowScope.() -> Unit = {},
 ) {
   CenterAlignedTopAppBar(
     title = {
@@ -43,5 +45,6 @@ fun NewsAppBar(
     ),
     modifier = Modifier.padding(horizontal = 16.dp),
     navigationIcon = navigationIcon,
+    actions = actions,
   )
 }
