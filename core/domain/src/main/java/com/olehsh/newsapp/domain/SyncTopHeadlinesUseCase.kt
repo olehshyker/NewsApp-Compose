@@ -20,9 +20,9 @@ import javax.inject.Inject
 
 class SyncTopHeadlinesUseCase @Inject constructor(
   private val homeRepository: HomeRepository,
-) {
+) : NoParamsCompletableUseCase() {
 
-  suspend operator fun invoke() {
-    return homeRepository.syncHeadlines()
+  override suspend fun execute(params: Unit) {
+    homeRepository.syncHeadlines()
   }
 }

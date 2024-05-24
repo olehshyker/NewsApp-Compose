@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.olehsh.newsapp.domain.GetBookmarksListUseCase
 import com.olehsh.newsapp.domain.GetNewsListUseCase
 import com.olehsh.newsapp.domain.GetTopHeadlinesUseCase
 import com.olehsh.newsapp.domain.SyncTopHeadlinesUseCase
@@ -44,7 +43,6 @@ class HomeViewModel @Inject constructor(
   private val syncTopHeadlinesUseCase: SyncTopHeadlinesUseCase,
   getNewsListUseCase: GetNewsListUseCase,
   private val updateBookmarkUseCase: UpdateBookmarkUseCase,
-  getBookmarksListUseCase: GetBookmarksListUseCase,
 ) : ViewModel() {
   init {
     syncHeadLines()
@@ -78,7 +76,7 @@ class HomeViewModel @Inject constructor(
 
   private fun syncHeadLines() {
     viewModelScope.launch {
-      syncTopHeadlinesUseCase()
+      syncTopHeadlinesUseCase.invoke()
     }
   }
   fun updateBookmark(article: NewsArticle) {
