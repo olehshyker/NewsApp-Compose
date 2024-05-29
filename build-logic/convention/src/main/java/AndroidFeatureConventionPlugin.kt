@@ -11,6 +11,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
         apply("build.android.library")
         apply("build.android.library.compose")
         apply("build.android.hilt")
+        apply("org.jetbrains.kotlin.plugin.compose")
       }
 
       val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")

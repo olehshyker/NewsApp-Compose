@@ -1,25 +1,24 @@
 [versions]
 agp = "8.3.2"
-kotlin = "1.9.23"
-ksp = "1.9.23-1.0.20"
+kotlin = "2.0.0"
+ksp = "2.0.0-1.0.21"
 material = "1.11.0"
-androidxActivity = "1.8.2"
-androidxFragment = "1.6.2"
-androidxLifecycle = "2.7.0"
+androidxActivity = "1.9.0"
+androidxLifecycle = "2.8.0"
 androidxRoom = "2.6.1"
 androidxArchCore = "2.2.0"
 androidXStartup = "1.1.1"
-androidxCompose = "1.7.0-alpha07"
+androidxCompose = "1.7.0-beta01"
 androidxComposeCompiler = "1.5.11"
-androidxComposeMaterial3 = "1.3.0-alpha04"
+androidxComposeMaterial3 = "1.3.0-beta01"
 androidxComposeConstraintLayout = "1.0.1"
 androidxComposeNavigation = "2.7.7"
-androidxCore = "1.12.0"
+androidxCore = "1.13.1"
 androidxHiltNavigationCompose = "1.2.0"
 androidxNavigation = "2.5.0"
 androidxPaging = "3.3.0-beta01"
 androidxPagingCompose = "3.3.0-beta01"
-androidxPagingCommonAndroid = "3.3.0-beta01"
+androidxPagingCommonAndroid = "3.3.0"
 hilt = "2.51.1"
 retrofit = "2.11.0"
 retrofitKotlinxSerializationJson = "1.0.0"
@@ -39,8 +38,8 @@ mockito-kotlin = "5.2.1"
 spotless = "6.21.0"
 appcompat = "1.6.1"
 jetbrainsKotlinJvm = "1.9.0"
-materialVersion = "1.11.0"
-coil = "2.5.0"
+materialVersion = "1.12.0"
+coil = "2.6.0"
 
 [libraries]
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -115,3 +114,4 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 jetbrainsKotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
